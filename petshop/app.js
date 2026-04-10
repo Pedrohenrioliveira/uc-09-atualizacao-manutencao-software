@@ -6,28 +6,32 @@
 // VALIDAÇÃO DO FORMULÁRIO
 // =====================
 
-// BUG #20: o evento está escutando 'DOMContentLoaded' mas a função
-// usa getElementById com o ID errado ('form-contato' ao invés de 'formContato')
 document.addEventListener('DOMContentLoaded', function () {
-
-  const form = document.getElementById('form-contato'); // BUG: ID errado! No HTML é 'formContato'
+  const form = document.getElementById('formContato');
 
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
-      const nome = document.getElementById('nome').value.trim();
-      const email = document.getElementById('e-mail').value.trim();
-      const mensagem = document.getElementById('mensagem').value.trim();
+      const nomeInput = document.getElementById('nome');
+      const emailInput = document.getElementById('email');
+      const mensagemInput = document.getElementById('mensagem');
+      const nome = nomeInput ? nomeInput.value.trim() : '';
+      const email = emailInput ? emailInput.value.trim() : '';
+      const mensagem = mensagemInput ? mensagemInput.value.trim() : '';
 
-      // BUG #21: validação de email incompleta - não valida o formato correto
       if (!nome || !email || !mensagem) {
         alert('Por favor, preencha todos os campos!');
         return;
       }
 
-      // BUG #22: mensagem de sucesso diz "entraremos em contato em até 24 horas"
-      // mas o email de contato no HTML está errado (.com.rb), então nunca funcionaria
+      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailValido.test(email)) {
+        alert('Por favor, digite um e-mail válido!');
+        return;
+      }
+
       alert('Mensagem enviada com sucesso! Entraremos em contato em até 24 horas.');
       form.reset();
     });
@@ -37,23 +41,27 @@ document.addEventListener('DOMContentLoaded', function () {
   // HIGHLIGHT DO MENU ATIVO
   // =====================
 
-  // BUG #23: a lógica de scroll para destacar o menu ativo tem um erro de lógica
-  // Ela usa 'offsetTop' sem considerar o header fixo (sticky), 
-  // então o menu ativo sempre ativa antes do usuário chegar na seção
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('nav a');
+  const header = document.querySelector('header');
 
   window.addEventListener('scroll', function () {
     let current = '';
+    const headerHeight = header ? header.offsetHeight : 60;
+    const scrollPosition = window.scrollY + headerHeight + 10;
+
     sections.forEach(section => {
-      // BUG: não desconta a altura do header sticky (~60px)
-      if (window.scrollY >= section.offsetTop) {
+      if (
+        scrollPosition >= section.offsetTop &&
+        scrollPosition < section.offsetTop + section.offsetHeight
+      ) {
         current = section.getAttribute('id');
       }
     });
 
     navLinks.forEach(link => {
       link.classList.remove('active');
+
       if (link.getAttribute('href') === '#' + current) {
         link.classList.add('active');
       }
@@ -61,11 +69,13 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // =====================
-  // ANO NO FOOTER (DEVERIA SER DINÂMICO)
+  // ANO NO FOOTER (DINÂMICO)
   // =====================
-  // BUG #19 (continuação): o desenvolvedor esqueceu de usar JS para manter
-  // o ano atualizado automaticamente. O ano está hardcoded no HTML como 2021.
-  // O código abaixo foi escrito mas nunca vinculado a nenhum elemento do HTML.
+
   const anoAtual = new Date().getFullYear();
-  // console.log('Ano atual:', anoAtual); // linha comentada e nunca usada
+  const anoElemento = document.getElementById('ano');
+
+  if (anoElemento) {
+    anoElemento.textContent = anoAtual;
+  }
 });
