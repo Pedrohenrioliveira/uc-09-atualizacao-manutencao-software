@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Galeria de Pets - Patas Felizes</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+
+<body class="font-nunito bg-white text-gray-900">
+
+  <!-- HEADER -->
+  <header class="bg-yellow-400 shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center">
+      <div class="flex items-center gap-4 mb-4 md:mb-0">
+        <img src="imagens/logo-petshop.png" class="w-12 h-12 rounded-full"/>
+        <span class="text-2xl font-extrabold text-white">Patas Felizes</span>
+      </div>
+
+      <nav>
+        <ul class="flex gap-6 text-white font-semibold text-sm">
+          <li><a href="index.html" class="hover:underline">Home</a></li>
+          <li><a href="index.html#servicos" class="hover:underline">Serviços</a></li>
+          <li><a href="agendamento.html" class="hover:underline">Agendamento</a></li>
+          <li><a href="galeria.html" class="underline">Galeria</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- TÍTULO -->
+  <section class="bg-yellow-50 py-20 px-4 text-center">
+    <h1 class="text-4xl font-extrabold text-yellow-500 mb-4">
+      Nossos Pets Felizes 🐾
+    </h1>
+    <p class="text-gray-600">
+      Veja alguns dos nossos clientes depois do atendimento 💛
+    </p>
+  </section>
+
+  <!-- GALERIA -->
+  <section class="py-20 px-4 bg-white">
+    <div class="max-w-7xl mx-auto grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+      <!-- CARD 1 -->
+      <div class="bg-yellow-50 rounded-2xl shadow overflow-hidden">
+        <img src="imagens/pet1.jpg" class="w-full h-60 object-cover"/>
+        <div class="p-4 text-center">
+          <p class="font-bold text-yellow-600">Thor</p>
+          <p class="text-sm text-gray-500">Banho e Tosa</p>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="bg-yellow-50 rounded-2xl shadow overflow-hidden">
+        <img src="imagens/pet2.jpg" class="w-full h-60 object-cover"/>
+        <div class="p-4 text-center">
+          <p class="font-bold text-yellow-600">Luna</p>
+          <p class="text-sm text-gray-500">Tosa</p>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="bg-yellow-50 rounded-2xl shadow overflow-hidden">
+        <img src="imagens/pet3.jpg" class="w-full h-60 object-cover"/>
+        <div class="p-4 text-center">
+          <p class="font-bold text-yellow-600">Mel</p>
+          <p class="text-sm text-gray-500">Banho</p>
+        </div>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="bg-yellow-50 rounded-2xl shadow overflow-hidden">
+        <img src="imagens/pet4.jpg" class="w-full h-60 object-cover"/>
+        <div class="p-4 text-center">
+          <p class="font-bold text-yellow-600">Bob</p>
+          <p class="text-sm text-gray-500">Adestramento</p>
+        </div>
+      </div>
+
+      <!-- CARD 5 -->
+      <div class="bg-yellow-50 rounded-2xl shadow overflow-hidden">
+        <img src="imagens/pet5.jpg" class="w-full h-60 object-cover"/>
+        <div class="p-4 text-center">
+          <p class="font-bold text-yellow-600">Nina</p>
+          <p class="text-sm text-gray-500">Banho e Tosa</p>
+        </div>
+      </div>
+
+      <!-- CARD 6 -->
+      <div class="bg-yellow-50 rounded-2xl shadow overflow-hidden">
+        <img src="imagens/pet6.jpg" class="w-full h-60 object-cover"/>
+        <div class="p-4 text-center">
+          <p class="font-bold text-yellow-600">Max</p>
+          <p class="text-sm text-gray-500">Banho</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-yellow-600 py-6 text-center">
+    <p class="text-yellow-100 text-sm">© 2026 Patas Felizes</p>
+  </footer>
+
+</body>
+</html>
