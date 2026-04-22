@@ -1,21 +1,16 @@
 // app.js - Patas Felizes Pet Shop
-// Desenvolvido por: João Dev (estagiário)
-// Data: 15/03/2024
-
-// =====================
-// VALIDAÇÃO DO FORMULÁRIO
-// =====================
 
 document.addEventListener('DOMContentLoaded', function () {
-  const form = document.getElementById('formContato');
+  const formContato = document.getElementById('formContato');
 
-  if (form) {
-    form.addEventListener('submit', function (e) {
+  if (formContato) {
+    formContato.addEventListener('submit', async function (e) {
       e.preventDefault();
 
       const nomeInput = document.getElementById('nome');
       const emailInput = document.getElementById('email');
       const mensagemInput = document.getElementById('mensagem');
+
       const nome = nomeInput ? nomeInput.value.trim() : '';
       const email = emailInput ? emailInput.value.trim() : '';
       const mensagem = mensagemInput ? mensagemInput.value.trim() : '';
@@ -32,14 +27,92 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      alert('Mensagem enviada com sucesso! Entraremos em contato em até 24 horas.');
-      form.reset();
+      const dados = {
+        nome,
+        email,
+        mensagem
+      };
+
+      try {
+        const response = await fetch('http://localhost:5118/api/contatos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dados)
+        });
+
+        const resultado = await response.json();
+
+        if (!response.ok) {
+          alert(resultado.mensagem || 'Erro ao enviar contato.');
+          return;
+        }
+
+        alert(resultado.mensagem || 'Mensagem enviada com sucesso!');
+        formContato.reset();
+      } catch (error) {
+        console.error('Erro ao enviar contato:', error);
+        alert('Não foi possível conectar com a API.');
+      }
     });
   }
 
-  // =====================
-  // HIGHLIGHT DO MENU ATIVO
-  // =====================
+  const formAgendamento = document.getElementById('formAgendamento');
+
+  if (formAgendamento) {
+    formAgendamento.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const nomeTutorInput = document.getElementById('nomeTutor');
+      const nomePetInput = document.getElementById('nomePet');
+      const servicoInput = document.getElementById('servico');
+      const dataInput = document.getElementById('data');
+      const telefoneInput = document.getElementById('telefone');
+
+      const nomeTutor = nomeTutorInput ? nomeTutorInput.value.trim() : '';
+      const nomePet = nomePetInput ? nomePetInput.value.trim() : '';
+      const servico = servicoInput ? servicoInput.value.trim() : '';
+      const dataAgendamento = dataInput ? dataInput.value : '';
+      const telefone = telefoneInput ? telefoneInput.value.trim() : '';
+
+      if (!nomeTutor || !nomePet || !servico || !dataAgendamento || !telefone) {
+        alert('Por favor, preencha todos os campos do agendamento!');
+        return;
+      }
+
+      const dados = {
+        nomeTutor,
+        nomePet,
+        servico,
+        dataAgendamento,
+        telefone
+      };
+
+      try {
+        const response = await fetch('http://localhost:5118/api/agendamentos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dados)
+        });
+
+        const resultado = await response.json();
+
+        if (!response.ok) {
+          alert(resultado.mensagem || 'Erro ao realizar agendamento.');
+          return;
+        }
+
+        alert(resultado.mensagem || 'Agendamento realizado com sucesso!');
+        formAgendamento.reset();
+      } catch (error) {
+        console.error('Erro ao enviar agendamento:', error);
+        alert('Não foi possível conectar com a API.');
+      }
+    });
+  }
 
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('nav a');
@@ -67,10 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   });
-
-  // =====================
-  // ANO NO FOOTER (DINÂMICO)
-  // =====================
 
   const anoAtual = new Date().getFullYear();
   const anoElemento = document.getElementById('ano');
