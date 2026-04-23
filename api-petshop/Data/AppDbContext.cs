@@ -20,6 +20,7 @@ public class AppDbContext : DbContext
     public DbSet<FotoAntesDepois> FotosAntesDepois { get; set; }
     public DbSet<Contato> Contatos { get; set; }
     public DbSet<Agendamento> Agendamentos { get; set; }
+    public DbSet<Depoimento> Depoimentos { get; set; }
 
     /// <summary>
     /// Este método é chamado quando o modelo de banco de dados está sendo criado.
@@ -31,6 +32,7 @@ public class AppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new Configurations.FotoAntesDepoisConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.ContatoConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.AgendamentoConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.DepoimentoConfiguration());
         // Chama o comportamento padrão da classe base
         base.OnModelCreating(modelBuilder);
     }

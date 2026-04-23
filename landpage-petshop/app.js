@@ -1,6 +1,8 @@
 // app.js - Patas Felizes Pet Shop
 
 document.addEventListener('DOMContentLoaded', function () {
+  const API_BASE_URL = 'http://localhost:5118';
+
   const formContato = document.getElementById('formContato');
 
   if (formContato) {
@@ -34,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
       };
 
       try {
-        const response = await fetch('http://localhost:5118/api/contatos', {
+        const response = await fetch(`${API_BASE_URL}/api/contatos`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -90,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
       };
 
       try {
-        const response = await fetch('http://localhost:5118/api/agendamentos', {
+        const response = await fetch(`${API_BASE_URL}/api/agendamentos`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -113,6 +115,67 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
+
+  async function carregarDepoimentos() {
+    const listaDepoimentos = document.getElementById('listaDepoimentos');
+
+    if (!listaDepoimentos) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/depoimentos`);
+      const depoimentos = await response.json();
+
+      if (!response.ok) {
+        listaDepoimentos.innerHTML = `
+          <div class="bg-yellow-50 rounded-2xl p-6 shadow col-span-full text-center text-red-500">
+            Não foi possível carregar os depoimentos.
+          </div>
+        `;
+        return;
+      }
+
+      if (!depoimentos || depoimentos.length === 0) {
+        listaDepoimentos.innerHTML = `
+          <div class="bg-yellow-50 rounded-2xl p-6 shadow col-span-full text-center text-gray-500">
+            Ainda não há depoimentos cadastrados.
+          </div>
+        `;
+        return;
+      }
+
+      listaDepoimentos.innerHTML = '';
+
+      depoimentos.forEach(depoimento => {
+        const card = document.createElement('div');
+        card.className = 'bg-yellow-50 rounded-2xl p-6 shadow';
+
+        const imagemUrl = `${API_BASE_URL}/${depoimento.caminhoFoto}`;
+
+        card.innerHTML = `
+          <img
+            src="${imagemUrl}"
+            alt="Foto de ${depoimento.nomeCliente}"
+            class="w-14 h-14 rounded-full mb-4 object-cover"
+          />
+          <p class="text-gray-700 italic mb-4">"${depoimento.texto}"</p>
+          <span class="font-bold text-yellow-600">${depoimento.nomeCliente}</span>
+        `;
+
+        listaDepoimentos.appendChild(card);
+      });
+    } catch (error) {
+      console.error('Erro ao carregar depoimentos:', error);
+      listaDepoimentos.innerHTML = `
+        <div class="bg-yellow-50 rounded-2xl p-6 shadow col-span-full text-center text-red-500">
+          Erro ao conectar com a API de depoimentos.
+        </div>
+      `;
+    }
+  }
+
+  carregarDepoimentos();
 
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('nav a');
