@@ -23,6 +23,6 @@ services:
       - "3400:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "SuperSenha@10"
-      MYSQL_DATABASE: "dbpadrao"
+      MYSQL_DATABASE: "db_patas_felizes"
     volumes:
       - mysql_data:/var/lib/mysql
