@@ -1,6 +1,7 @@
 using ApiPetshop.Data;
 using ApiPetshop.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiPetshop.Controllers;
 
@@ -37,5 +38,15 @@ public class ContatosController : ControllerBase
             mensagem = "Contato salvo com sucesso.",
             contato
         });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Listar()
+    {
+        var contatos = await _context.Contatos
+            .OrderByDescending(c => c.DataCriacao)
+            .ToListAsync();
+
+        return Ok(contatos);
     }
 }

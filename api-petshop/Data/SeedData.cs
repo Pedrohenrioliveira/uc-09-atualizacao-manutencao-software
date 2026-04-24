@@ -22,23 +22,23 @@ public static class SeedData
             context.FotosAntesDepois.AddRange(
                 new FotoAntesDepois
                 {
-                    NomeCachorro = "Bob", // Nome fictício para demonstração
-                    CaminhoFoto = "uploads/bob-antes-depois.jpg", // Caminho de teste
-                    LinkRedeSocial = null,
-                    DataCriacao = DateTime.UtcNow // Data e hora atual (padrão UTC)
+                    NomeCachorro = "Thor",
+                    CaminhoFotoAntes = "uploads/seed_thor_antes.jpg",
+                    CaminhoFotoDepois = "uploads/seed_thor_depois.jpg",
+                    DataCriacao = DateTime.UtcNow.AddDays(-2)
                 },
                 new FotoAntesDepois
                 {
-                    NomeCachorro = "Luna",
-                    CaminhoFoto = "uploads/luna-antes-depois.jpg",
-                    LinkRedeSocial = null,
-                    DataCriacao = DateTime.UtcNow
+                    NomeCachorro = "Mel",
+                    CaminhoFotoAntes = "uploads/seed_mel_antes.jpg",
+                    CaminhoFotoDepois = "uploads/seed_mel_depois.jpg",
+                    DataCriacao = DateTime.UtcNow.AddDays(-1)
                 },
                 new FotoAntesDepois
                 {
-                    NomeCachorro = "Toby",
-                    CaminhoFoto = "uploads/toby-antes-depois.jpg",
-                    LinkRedeSocial = null,
+                    NomeCachorro = "Bob",
+                    CaminhoFotoAntes = "uploads/seed_bob_antes.jpg",
+                    CaminhoFotoDepois = "uploads/seed_bob_depois.jpg",
                     DataCriacao = DateTime.UtcNow
                 }
             );

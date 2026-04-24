@@ -15,8 +15,8 @@ public class FotoAntesDepois
     // Representa a coluna para o nome do cachorro. O "= string.Empty;" serve para evitar o aviso
     // de que este campo na inicialização não pode ser nulo (null warning).
     public string NomeCachorro { get; set; } = string.Empty;
-    // Coluna para armazenar o endereço relativo de onde a foto foi salva fisicamente no disco.
-    public string CaminhoFoto { get; set; } = string.Empty;
+    public string CaminhoFotoAntes { get; set; } = string.Empty;
+    public string CaminhoFotoDepois { get; set; } = string.Empty;
 
     // A interrogação "?" em "string?" quer dizer que essa propriedade é opcional (nula) na tabela (NULL)
     public string? LinkRedeSocial { get; set; }
@@ -37,5 +37,6 @@ public class UploadFotoDto
     public string NomeCachorro { get; set; }
     
     // Representa um envio de arquivo via Form/Mulitpart
-    public IFormFile Arquivo { get; set; }
+    public IFormFile ArquivoAntes { get; set; }
+    public IFormFile ArquivoDepois { get; set; }
 }
