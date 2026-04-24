@@ -45,32 +45,40 @@ public class FotosAntesDepoisController : ControllerBase
     [Consumes("multipart/form-data")] // Assinatura obrigatória para recebimento de arquivos em formulários web!
     public async Task<IActionResult> UploadFoto([FromForm] UploadFotoDto request)
     {
-        // 1. Validação básica: garante que recebemos algum arquivo com tamanho maior que 0 bytes
-        if (request.Arquivo == null || request.Arquivo.Length == 0)
-            return BadRequest("Arquivo não enviado.");
+        // 1. Validação básica: garante que recebemos os arquivos
+        if (request.ArquivoAntes == null || request.ArquivoAntes.Length == 0 ||
+            request.ArquivoDepois == null || request.ArquivoDepois.Length == 0)
+            return BadRequest("Os dois arquivos (Antes e Depois) são obrigatórios.");
 
         // 2. Diretório físico: cria/encontra a pasta "wwwroot/uploads" no servidor/projeto onde vamos salvar as fotos
         var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
         if (!Directory.Exists(uploadsPath))
             Directory.CreateDirectory(uploadsPath);
 
-        // 3. Nome seguro: Geração de um "Guid" (Código único e aleatório) para garantir 
-        //    que não haverá arquivos sobrescrevendo/apresentando erros caso tenham o mesmo nome original
-        var fileName = $"{Guid.NewGuid()}_{request.Arquivo.FileName}";
-        var filePath = Path.Combine(uploadsPath, fileName);
+        // 3. Nomes seguros
+        var fileNameAntes = $"{Guid.NewGuid()}_antes_{request.ArquivoAntes.FileName}";
+        var fileNameDepois = $"{Guid.NewGuid()}_depois_{request.ArquivoDepois.FileName}";
+        
+        var filePathAntes = Path.Combine(uploadsPath, fileNameAntes);
+        var filePathDepois = Path.Combine(uploadsPath, fileNameDepois);
 
-        // 4. Salva o arquivo: Abre um "Stream" na memória e copia/transfere os dados do Arquivo para onde escolhemos (no HD do servidor)
-        using (var stream = new FileStream(filePath, FileMode.Create))
+        // 4. Salva os arquivos
+        using (var streamAntes = new FileStream(filePathAntes, FileMode.Create))
         {
-            await request.Arquivo.CopyToAsync(stream);
+            await request.ArquivoAntes.CopyToAsync(streamAntes);
+        }
+        
+        using (var streamDepois = new FileStream(filePathDepois, FileMode.Create))
+        {
+            await request.ArquivoDepois.CopyToAsync(streamDepois);
         }
 
-        // 5. Prepara o objeto: Cria a entidade principal que será salva no bando de dados da aplicação
+        // 5. Prepara o objeto: Cria a entidade principal que será salva no banco de dados
         var foto = new FotoAntesDepois
         {
             NomeCachorro = request.NomeCachorro,
-            // Guardamos apenas o caminho relativo que será exposto na Web para as páginas acessarem a imagem
-            CaminhoFoto = $"uploads/{fileName}",
+            CaminhoFotoAntes = $"uploads/{fileNameAntes}",
+            CaminhoFotoDepois = $"uploads/{fileNameDepois}",
             DataCriacao = DateTime.UtcNow
         };
         
@@ -78,7 +86,7 @@ public class FotosAntesDepoisController : ControllerBase
         _context.FotosAntesDepois.Add(foto);
         await _context.SaveChangesAsync();
 
-        // 7. Retorna "Created" (HTTP 201), indicando também em qual rota é possível obter o registro recém criado
+        // 7. Retorna "Created" (HTTP 201)
         return CreatedAtAction(nameof(ObterTodas), new { id = foto.Id }, foto);
     }
 
@@ -89,18 +97,22 @@ public class FotosAntesDepoisController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Deletar(int id)
     {
-        // Tenta achar aquele ID específico no MySQL
         var foto = await _context.FotosAntesDepois.FindAsync(id);
         
-        // Se a foto não existir ou não for encontrada pro ID fornecido, retorna erro padrão 404 (Not Found)
         if (foto == null)
             return NotFound(new { mensagem = "Foto não encontrada." });
 
-        // Apaga do banco e confirma (salvando as alterações)
+        var caminhoImagemAntes = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", foto.CaminhoFotoAntes.Replace("/", Path.DirectorySeparatorChar.ToString()));
+        if (System.IO.File.Exists(caminhoImagemAntes))
+            System.IO.File.Delete(caminhoImagemAntes);
+
+        var caminhoImagemDepois = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", foto.CaminhoFotoDepois.Replace("/", Path.DirectorySeparatorChar.ToString()));
+        if (System.IO.File.Exists(caminhoImagemDepois))
+            System.IO.File.Delete(caminhoImagemDepois);
+
         _context.FotosAntesDepois.Remove(foto);
         await _context.SaveChangesAsync();
 
-        // Operação bem-sucedida! Retorna Status 200 (Ok) e uma mensagem confirmando
-        return Ok(new { mensagem = "Foto excluída com sucesso." });
+        return Ok(new { mensagem = "Fotos excluídas com sucesso." });
     }
 }

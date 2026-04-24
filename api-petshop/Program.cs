@@ -45,7 +45,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // HTTPS
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 // Arquivos estáticos
 app.UseStaticFiles();

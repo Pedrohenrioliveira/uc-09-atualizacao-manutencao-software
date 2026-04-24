@@ -12,7 +12,11 @@ public class FotoAntesDepoisConfiguration : IEntityTypeConfiguration<FotoAntesDe
         builder.Property(f => f.NomeCachorro)
             .IsRequired()
             .HasMaxLength(100);
-        builder.Property(f => f.CaminhoFoto)
+        builder.Property(f => f.CaminhoFotoAntes)
+            .IsRequired()
+            .HasMaxLength(255);
+
+        builder.Property(f => f.CaminhoFotoDepois)
             .IsRequired()
             .HasMaxLength(255);
         builder.Property(f => f.LinkRedeSocial)

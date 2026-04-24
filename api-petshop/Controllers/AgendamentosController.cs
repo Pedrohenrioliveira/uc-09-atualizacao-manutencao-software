@@ -1,6 +1,7 @@
 using ApiPetshop.Data;
 using ApiPetshop.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiPetshop.Controllers;
 
@@ -43,5 +44,29 @@ public class AgendamentosController : ControllerBase
             mensagem = "Agendamento salvo com sucesso.",
             agendamento
         });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Listar()
+    {
+        var agendamentos = await _context.Agendamentos
+            .OrderByDescending(a => a.DataAgendamento)
+            .ToListAsync();
+
+        return Ok(agendamentos);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Excluir(int id)
+    {
+        var agendamento = await _context.Agendamentos.FindAsync(id);
+
+        if (agendamento == null)
+            return NotFound(new { mensagem = "Agendamento não encontrado." });
+
+        _context.Agendamentos.Remove(agendamento);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { mensagem = "Agendamento excluído com sucesso." });
     }
 }

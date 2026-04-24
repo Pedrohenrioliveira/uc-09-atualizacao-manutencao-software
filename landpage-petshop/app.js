@@ -1,7 +1,7 @@
 // app.js - Patas Felizes Pet Shop
 
 document.addEventListener('DOMContentLoaded', function () {
-  const API_BASE_URL = 'http://localhost:5118';
+  const API_BASE_URL = 'http://127.0.0.1:5118';
 
   const formContato = document.getElementById('formContato');
 
@@ -176,6 +176,75 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   carregarDepoimentos();
+
+  async function carregarFotos() {
+    const listaFotos = document.getElementById('listaFotos');
+
+    if (!listaFotos) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/fotos`);
+      const fotos = await response.json();
+
+      if (!response.ok) {
+        listaFotos.innerHTML = `
+          <div class="col-span-full text-center text-red-500">
+            Não foi possível carregar a galeria.
+          </div>
+        `;
+        return;
+      }
+
+      if (!fotos || fotos.length === 0) {
+        listaFotos.innerHTML = `
+          <div class="col-span-full text-center text-gray-500">
+            A galeria ainda está vazia.
+          </div>
+        `;
+        return;
+      }
+
+      listaFotos.innerHTML = '';
+
+      fotos.forEach(foto => {
+        const card = document.createElement('div');
+        card.className = 'bg-yellow-50 rounded-2xl shadow overflow-hidden';
+
+        const imagemAntesUrl = `${API_BASE_URL}/${foto.caminhoFotoAntes}`;
+        const imagemDepoisUrl = `${API_BASE_URL}/${foto.caminhoFotoDepois}`;
+
+        card.innerHTML = `
+          <div class="flex">
+            <div class="w-1/2 relative">
+              <span class="absolute top-2 left-2 bg-gray-800 text-white text-xs font-bold px-2 py-1 rounded opacity-80">Antes</span>
+              <img src="${imagemAntesUrl}" alt="Foto Antes - ${foto.nomeCachorro}" class="w-full h-48 md:h-60 object-cover border-r border-yellow-200"/>
+            </div>
+            <div class="w-1/2 relative">
+              <span class="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded opacity-90">Depois</span>
+              <img src="${imagemDepoisUrl}" alt="Foto Depois - ${foto.nomeCachorro}" class="w-full h-48 md:h-60 object-cover"/>
+            </div>
+          </div>
+          <div class="p-4 text-center">
+            <p class="font-bold text-yellow-600">${foto.nomeCachorro}</p>
+            <p class="text-sm text-gray-500">Patas Felizes</p>
+          </div>
+        `;
+
+        listaFotos.appendChild(card);
+      });
+    } catch (error) {
+      console.error('Erro ao carregar fotos:', error);
+      listaFotos.innerHTML = `
+        <div class="col-span-full text-center text-red-500">
+          Erro ao conectar com a API de fotos.
+        </div>
+      `;
+    }
+  }
+
+  carregarFotos();
 
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('nav a');
